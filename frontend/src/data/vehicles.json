@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "plateNumber": "B-123-ABC",
+    "type": "Hearse",
+    "companyId": 1,
+    "status": "active",
+    "lastInspection": "2024-01-15",
+    "nextInspection": "2025-01-15",
+    "registrationDate": "2020-06-10",
+    "model": "Mercedes-Benz Vito",
+    "year": 2020
+  },
+  {
+    "id": 2,
+    "plateNumber": "B-456-DEF",
+    "type": "Transport Van",
+    "companyId": 1,
+    "status": "active",
+    "lastInspection": "2023-12-20",
+    "nextInspection": "2024-12-20",
+    "registrationDate": "2019-03-15",
+    "model": "Ford Transit",
+    "year": 2019
+  },
+  {
+    "id": 3,
+    "plateNumber": "B-789-GHI",
+    "type": "Hearse",
+    "companyId": 1,
+    "status": "maintenance",
+    "lastInspection": "2024-02-01",
+    "nextInspection": "2025-02-01",
+    "registrationDate": "2021-09-05",
+    "model": "Mercedes-Benz Sprinter",
+    "year": 2021
+  }
+]

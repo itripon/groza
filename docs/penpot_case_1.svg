@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+  <style>
+    .frame { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .section { fill: #f7f7f7; stroke: #c9c9c9; stroke-width: 1; }
+    .label { font-family: Arial, Helvetica, sans-serif; font-size: 16px; fill: #111111; }
+    .title { font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: bold; fill: #111111; }
+    .small { font-family: Arial, Helvetica, sans-serif; font-size: 14px; fill: #111111; }
+    .muted { font-family: Arial, Helvetica, sans-serif; font-size: 14px; fill: #666666; }
+    .button { fill: #111111; }
+    .button-text { font-family: Arial, Helvetica, sans-serif; font-size: 14px; fill: #ffffff; }
+    .input { fill: #ffffff; stroke: #888888; stroke-width: 1; }
+  </style>
+
+  <!-- Frame 1: Login -->
+  <rect x="40" y="40" width="720" height="520" class="frame" rx="8" />
+  <text x="60" y="80" class="title">Login</text>
+
+  <text x="320" y="150" class="title">GROZA</text>
+  <text x="255" y="190" class="label">Sign in to your account</text>
+
+  <text x="140" y="245" class="label">Email / Username</text>
+  <rect x="140" y="260" width="520" height="40" class="input" rx="4" />
+  <text x="155" y="286" class="muted">user@example.com</text>
+
+  <text x="140" y="330" class="label">Password</text>
+  <rect x="140" y="345" width="520" height="40" class="input" rx="4" />
+  <text x="155" y="371" class="muted">••••••••••••</text>
+
+  <rect x="140" y="410" width="180" height="44" class="button" rx="6" />
+  <text x="185" y="438" class="button-text">Sign In</text>
+
+  <text x="140" y="485" class="small">Forgot password?</text>
+
+  <!-- Frame 2: Role-Aware Dashboard -->
+  <rect x="840" y="40" width="720" height="1000" class="frame" rx="8" />
+  <text x="860" y="80" class="title">Role-Aware Dashboard</text>
+
+  <rect x="860" y="100" width="680" height="50" class="section" rx="6" />
+  <text x="880" y="132" class="label">GROZA</text>
+  <text x="1290" y="132" class="small">[User]   [Logout]</text>
+
+  <text x="860" y="190" class="label">Roles: GLOBAL_ADMIN · VALIDATOR · INSPECTOR</text>
+
+  <text x="860" y="230" class="title">Quick Actions</text>
+  <rect x="860" y="250" width="200" height="90" class="section" rx="6" />
+  <rect x="1080" y="250" width="200" height="90" class="section" rx="6" />
+  <rect x="1300" y="250" width="200" height="90" class="section" rx="6" />
+  <text x="910" y="300" class="small">Action 1</text>
+  <text x="1130" y="300" class="small">Action 2</text>
+  <text x="1350" y="300" class="small">Action 3</text>
+
+  <text x="860" y="380" class="title">Status Widgets</text>
+  <rect x="860" y="400" width="330" height="100" class="section" rx="6" />
+  <rect x="1210" y="400" width="330" height="100" class="section" rx="6" />
+  <text x="890" y="450" class="small">Metric A</text>
+  <text x="1240" y="450" class="small">Metric B</text>
+
+  <text x="860" y="540" class="title">Recent Activity</text>
+  <rect x="860" y="560" width="680" height="220" class="section" rx="6" />
+  <text x="890" y="600" class="small">- item 1</text>
+  <text x="890" y="630" class="small">- item 2</text>
+  <text x="890" y="660" class="small">- item 3</text>
+</svg>

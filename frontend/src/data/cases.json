@@ -1,0 +1,35 @@
+[
+  {
+    "id": "CASE-2024-001",
+    "deceasedName": "Ion Popescu",
+    "date": "2024-02-10",
+    "status": "active",
+    "companyId": 1,
+    "permits": ["transport", "mortuary"],
+    "location": "Spitalul Central Bucuresti",
+    "assignedEmployee": "Maria Ionescu",
+    "vehicle": "B-123-ABC"
+  },
+  {
+    "id": "CASE-2024-002",
+    "deceasedName": "Elena Georgescu",
+    "date": "2024-02-11",
+    "status": "pending",
+    "companyId": 1,
+    "permits": ["transport"],
+    "location": "Spitalul Universitar Bucuresti",
+    "assignedEmployee": null,
+    "vehicle": null
+  },
+  {
+    "id": "CASE-2024-003",
+    "deceasedName": "Vasile Marin",
+    "date": "2024-02-09",
+    "status": "completed",
+    "companyId": 1,
+    "permits": ["transport", "mortuary", "embalming"],
+    "location": "Spitalul Floreasca",
+    "assignedEmployee": "Maria Ionescu",
+    "vehicle": "B-123-ABC"
+  }
+]

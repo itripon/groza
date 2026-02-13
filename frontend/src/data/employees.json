@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Maria Ionescu",
+    "email": "maria@funeralservices.ro",
+    "phone": "0712345678",
+    "position": "Driver",
+    "companyId": 1,
+    "hireDate": "2023-05-15",
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "name": "Gheorghe Popescu",
+    "email": "gheorghe@funeralservices.ro",
+    "phone": "0723456789",
+    "position": "Embalmer",
+    "companyId": 1,
+    "hireDate": "2022-03-10",
+    "status": "active"
+  },
+  {
+    "id": 3,
+    "name": "Ana Marinescu",
+    "email": "ana@funeralservices.ro",
+    "phone": "0734567890",
+    "position": "Administrative",
+    "companyId": 1,
+    "hireDate": "2023-08-20",
+    "status": "active"
+  }
+]

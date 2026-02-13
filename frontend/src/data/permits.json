@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "type": "Transport Permit",
+    "companyId": 1,
+    "issueDate": "2024-01-01",
+    "expiryDate": "2024-12-31",
+    "status": "valid",
+    "issuedBy": "DSP Bucuresti",
+    "permitNumber": "TP-2024-001-BUC",
+    "conditions": "Valid for all vehicles registered in the system"
+  },
+  {
+    "id": 2,
+    "type": "Mortuary Passport",
+    "companyId": 1,
+    "issueDate": "2024-01-01",
+    "expiryDate": "2024-12-31",
+    "status": "valid",
+    "issuedBy": "DSP Bucuresti",
+    "permitNumber": "MP-2024-001-BUC",
+    "conditions": "Valid for processing location: Str. Industriala 45"
+  },
+  {
+    "id": 3,
+    "type": "Embalming Permit",
+    "companyId": 1,
+    "issueDate": "2024-01-01",
+    "expiryDate": "2024-12-31",
+    "status": "valid",
+    "issuedBy": "DSP Bucuresti",
+    "permitNumber": "EP-2024-001-BUC",
+    "conditions": "Requires certified embalmer present"
+  },
+  {
+    "id": 4,
+    "type": "Transport Permit",
+    "companyId": 1,
+    "issueDate": "2024-02-10",
+    "expiryDate": null,
+    "status": "pending",
+    "issuedBy": null,
+    "permitNumber": null,
+    "conditions": "Awaiting DSP approval"
+  }
+]

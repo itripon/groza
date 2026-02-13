@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "name": "Funeral Services Ltd",
+    "cui": "RO12345678",
+    "status": "GREEN",
+    "location": "Bucharest",
+    "address": "Str. Victoriei 123, Sector 1",
+    "phone": "0212345678",
+    "email": "contact@funeralservices.ro",
+    "employees": 12,
+    "vehicles": 5,
+    "processingLocation": "Bucharest, Sector 2, Str. Industriala 45"
+  },
+  {
+    "id": 2,
+    "name": "Memorial Services SRL",
+    "cui": "RO23456789",
+    "status": "GREEN",
+    "location": "Cluj-Napoca",
+    "address": "Str. Memorandumului 78",
+    "phone": "0264987654",
+    "email": "office@memorialservices.ro",
+    "employees": 8,
+    "vehicles": 3,
+    "processingLocation": "Cluj-Napoca, Str. Fabricii 12"
+  },
+  {
+    "id": 3,
+    "name": "Dignitas Funerare",
+    "cui": "RO34567890",
+    "status": "RED",
+    "location": "Timișoara",
+    "address": "Bd. Revolutiei 234",
+    "phone": "0256123456",
+    "email": "contact@dignitas.ro",
+    "employees": 5,
+    "vehicles": 2,
+    "processingLocation": null
+  }
+]
