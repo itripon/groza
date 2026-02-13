@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
-import { Html5Qrcode } from 'html5-qrcode'
 import './Dashboard.css'
 import './Companies.css'
 import defaultCompanies from '../data/companies.json'
 import defaultCases from '../data/cases.json'
 import defaultEmployees from '../data/employees.json'
+import defaultVehicles from '../data/vehicles.json'
+import defaultPermits from '../data/permits.json'
 
 // Import components
 import QuickActions from '../components/QuickActions'
@@ -17,8 +18,7 @@ import Employees from '../components/Employees'
 import Vehicles from '../components/Vehicles'
 import Permits from '../components/Permits'
 import CompanyInfo from '../components/CompanyInfo'
-import ScanQR from '../components/ScanQR'
-import ValidationHistory from '../components/ValidationHistory'
+import Validator from '../components/Validator'
 
 function Dashboard({ user, onLogout }) {
   const navigate = useNavigate()
@@ -30,15 +30,7 @@ function Dashboard({ user, onLogout }) {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showQRModal, setShowQRModal] = useState(false)
   const [selectedCase, setSelectedCase] = useState(null)
-  const [scannedData, setScannedData] = useState(null)
-  const [showValidationModal, setShowValidationModal] = useState(false)
-  const [qrInput, setQrInput] = useState('')
-  const [isScanning, setIsScanning] = useState(false)
-  const [scanError, setScanError] = useState('')
-  const [cameraInfo, setCameraInfo] = useState('')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const scannerRef = useRef(null)
-  const html5QrCodeRef = useRef(null)
   
   // Load companies from localStorage or use defaults
   const [companies, setCompanies] = useState(() => {
@@ -105,213 +97,6 @@ function Dashboard({ user, onLogout }) {
     }
   }
 
-  const handleScanQR = () => {
-    try {
-      const data = JSON.parse(qrInput)
-      processScannedData(data)
-      setQrInput('')
-    } catch (error) {
-      alert('Invalid QR code data. Please check and try again.')
-    }
-  }
-
-  const processScannedData = (data) => {
-    // Find company and case details
-    const company = companies.find(c => c.id === data.companyId)
-    const caseData = defaultCases.find(c => c.id === data.caseId)
-    const employee = defaultEmployees.find(e => e.companyId === data.companyId)
-    const vehicle = defaultVehicles.find(v => v.companyId === data.companyId)
-    
-    setScannedData({
-      ...data,
-      company,
-      caseData,
-      employee,
-      vehicle
-    })
-    setShowValidationModal(true)
-    
-    // Stop scanning if active
-    if (isScanning) {
-      stopScanning()
-    }
-  }
-
-  const testCameraAccess = async () => {
-    setCameraInfo('Testing camera access...')
-    setScanError('')
-    
-    try {
-      // Detailed browser diagnostics
-      const info = []
-      info.push(`📱 User Agent: ${navigator.userAgent.substring(0, 50)}...`)
-      info.push(`🔒 Protocol: ${window.location.protocol}`)
-      info.push(`🌐 Host: ${window.location.host}`)
-      
-      // Check if getUserMedia is supported
-      if (!navigator.mediaDevices) {
-        info.push('❌ navigator.mediaDevices not available')
-        info.push('⚠️ SOLUTION: iOS Safari requires HTTPS for camera access')
-        info.push('ℹ️ Try accessing via: https://localhost:3000 (if SSL configured)')
-        setCameraInfo(info.join('\n'))
-        return
-      }
-      
-      if (!navigator.mediaDevices.getUserMedia) {
-        info.push('❌ getUserMedia not supported')
-        info.push('⚠️ This browser/context does not support camera access')
-        setCameraInfo(info.join('\n'))
-        return
-      }
-
-      info.push('✅ getUserMedia is supported')
-
-      // Try to get cameras
-      try {
-        const cameras = await Html5Qrcode.getCameras()
-        
-        if (!cameras || cameras.length === 0) {
-          info.push('❌ No cameras found on device')
-          setCameraInfo(info.join('\n'))
-          return
-        }
-
-        info.push(`✅ Found ${cameras.length} camera(s):`)
-        cameras.forEach((c, i) => {
-          info.push(`   ${i + 1}. ${c.label || 'Camera ' + (i + 1)} (${c.id.substring(0, 20)}...)`)
-        })
-
-        // Try to request camera permission
-        try {
-          info.push('🔄 Requesting camera permission...')
-          const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: 'environment' } 
-          })
-          stream.getTracks().forEach(track => track.stop())
-          info.push('✅ Camera permission granted!')
-          info.push('✅ Ready to scan QR codes!')
-        } catch (permError) {
-          info.push(`❌ Camera permission error: ${permError.name}`)
-          info.push(`   Message: ${permError.message}`)
-          if (permError.name === 'NotAllowedError') {
-            info.push('⚠️ User denied camera permission')
-          } else if (permError.name === 'NotFoundError') {
-            info.push('⚠️ No camera hardware found')
-          }
-        }
-      } catch (cameraError) {
-        info.push(`❌ Camera detection error: ${cameraError.message}`)
-      }
-      
-      setCameraInfo(info.join('\n'))
-    } catch (error) {
-      setCameraInfo(`❌ Unexpected error: ${error.message}`)
-    }
-  }
-
-  const startScanning = async () => {
-    try {
-      setScanError('')
-      setIsScanning(true)
-      
-      if (!html5QrCodeRef.current) {
-        html5QrCodeRef.current = new Html5Qrcode("qr-reader")
-      }
-
-      const config = { 
-        fps: 10, 
-        qrbox: { width: 250, height: 250 },
-        aspectRatio: 1.0,
-        formatsToSupport: [0], // Only QR codes
-        supportedScanTypes: [1], // Camera scan only
-        experimentalFeatures: {
-          useBarCodeDetectorIfSupported: true
-        }
-      }
-
-      // Try to get cameras first to provide better error messages
-      try {
-        const cameras = await Html5Qrcode.getCameras()
-        if (!cameras || cameras.length === 0) {
-          throw new Error('No cameras found on this device')
-        }
-      } catch (cameraError) {
-        throw new Error('Unable to access camera. Please check permissions in Settings.')
-      }
-
-      await html5QrCodeRef.current.start(
-        { facingMode: "environment" },
-        config,
-        (decodedText) => {
-          try {
-            const data = JSON.parse(decodedText)
-            processScannedData(data)
-          } catch (error) {
-            setScanError('Invalid QR code format. Please try again.')
-          }
-        },
-        (errorMessage) => {
-          // Scanning error - ignore repetitive scanning errors
-        }
-      )
-    } catch (err) {
-      console.error('Scanner error:', err)
-      let errorMsg = err.message || 'Unable to start camera'
-      
-      // Provide iOS-specific guidance
-      if (errorMsg.includes('NotAllowedError') || errorMsg.includes('Permission')) {
-        errorMsg = 'Camera access denied. Go to Settings > Safari > Camera and allow access.'
-      } else if (errorMsg.includes('NotFoundError')) {
-        errorMsg = 'No camera found. Please ensure your device has a camera.'
-      } else if (errorMsg.includes('NotReadableError')) {
-        errorMsg = 'Camera is in use by another app. Please close other apps and try again.'
-      }
-      
-      setScanError(errorMsg)
-      setIsScanning(false)
-    }
-  }
-
-  const stopScanning = async () => {
-    if (html5QrCodeRef.current && isScanning) {
-      try {
-        await html5QrCodeRef.current.stop()
-        await html5QrCodeRef.current.clear()
-        setIsScanning(false)
-      } catch (err) {
-        console.error('Error stopping scanner:', err)
-        setIsScanning(false)
-      }
-    }
-  }
-
-  // Cleanup scanner on unmount or when switching sections
-  useEffect(() => {
-    return () => {
-      if (html5QrCodeRef.current && isScanning) {
-        html5QrCodeRef.current.stop()
-          .then(() => html5QrCodeRef.current.clear())
-          .catch(err => console.error(err))
-      }
-    }
-  }, [isScanning])
-
-  useEffect(() => {
-    if (activeSection !== 'scan-qr' && isScanning) {
-      stopScanning()
-    }
-  }, [activeSection])
-
-  const handleValidationDecision = (approved) => {
-    if (approved) {
-      alert(`Pickup APPROVED for case ${scannedData.caseId}`)
-    } else {
-      alert(`Pickup REJECTED for case ${scannedData.caseId}`)
-    }
-    setShowValidationModal(false)
-    setScannedData(null)
-  }
-
   const renderContent = () => {
     switch (activeSection) {
       case 'quick-actions':
@@ -331,21 +116,8 @@ function Dashboard({ user, onLogout }) {
       case 'company-info':
         return <CompanyInfo companies={companies} user={user} />
       case 'scan-qr':
-        return (
-          <ScanQR 
-            isScanning={isScanning}
-            scanError={scanError}
-            cameraInfo={cameraInfo}
-            qrInput={qrInput}
-            setQrInput={setQrInput}
-            startScanning={startScanning}
-            stopScanning={stopScanning}
-            testCameraAccess={testCameraAccess}
-            handleScanQR={handleScanQR}
-          />
-        )
       case 'validation-history':
-        return <ValidationHistory />
+        return <Validator companies={companies} />
       default:
         return null
     }
@@ -712,117 +484,6 @@ function Dashboard({ user, onLogout }) {
               </button>
               <button type="button" className="submit-btn" onClick={handleDownloadQR}>
                 Download QR Code
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showValidationModal && scannedData && (
-        <div className="modal-overlay" onClick={() => setShowValidationModal(false)}>
-          <div className="modal-content validation-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Validation Summary</h3>
-              <button className="close-button" onClick={() => setShowValidationModal(false)}>×</button>
-            </div>
-            <div className="validation-body">
-              <div className="validation-section">
-                <h4>Company Authorization</h4>
-                <div className="validation-grid">
-                  <div className="validation-item">
-                    <span className="validation-label">Company:</span>
-                    <span className="validation-value">{scannedData.company?.name || 'Unknown'}</span>
-                  </div>
-                  <div className="validation-item">
-                    <span className="validation-label">Status:</span>
-                    <span className={`status-badge ${scannedData.company?.status?.toLowerCase()}`}>
-                      {scannedData.company?.status || 'UNKNOWN'}
-                    </span>
-                  </div>
-                  <div className="validation-item">
-                    <span className="validation-label">Location:</span>
-                    <span className="validation-value">{scannedData.company?.location || 'N/A'}</span>
-                  </div>
-                  <div className="validation-item">
-                    <span className="validation-label">CUI:</span>
-                    <span className="validation-value">{scannedData.company?.cui || 'N/A'}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="validation-section">
-                <h4>Case Details</h4>
-                <div className="validation-grid">
-                  <div className="validation-item">
-                    <span className="validation-label">Case ID:</span>
-                    <span className="validation-value">{scannedData.caseId}</span>
-                  </div>
-                  <div className="validation-item">
-                    <span className="validation-label">Deceased:</span>
-                    <span className="validation-value">{scannedData.deceasedName}</span>
-                  </div>
-                  <div className="validation-item">
-                    <span className="validation-label">Date:</span>
-                    <span className="validation-value">{scannedData.date}</span>
-                  </div>
-                  <div className="validation-item">
-                    <span className="validation-label">Permits:</span>
-                    <span className="validation-value">{scannedData.permits?.join(', ') || 'None'}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="validation-section">
-                <h4>Employee & Vehicle</h4>
-                <div className="validation-grid">
-                  <div className="validation-item">
-                    <span className="validation-label">Employee:</span>
-                    <span className="validation-value">{scannedData.employee?.name || 'Not assigned'}</span>
-                  </div>
-                  <div className="validation-item">
-                    <span className="validation-label">Position:</span>
-                    <span className="validation-value">{scannedData.employee?.position || 'N/A'}</span>
-                  </div>
-                  <div className="validation-item">
-                    <span className="validation-label">Vehicle:</span>
-                    <span className="validation-value">{scannedData.vehicle?.plateNumber || 'Not assigned'}</span>
-                  </div>
-                  <div className="validation-item">
-                    <span className="validation-label">Vehicle Type:</span>
-                    <span className="validation-value">{scannedData.vehicle?.type || 'N/A'}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className={`validation-decision ${scannedData.company?.status === 'GREEN' ? 'valid' : 'invalid'}`}>
-                {scannedData.company?.status === 'GREEN' ? (
-                  <>
-                    <span className="decision-icon">✓</span>
-                    <span className="decision-text">Company is authorized for pickup</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="decision-icon">✗</span>
-                    <span className="decision-text">Company is NOT authorized (RED status)</span>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="modal-actions">
-              <button 
-                type="button" 
-                className="cancel-btn" 
-                onClick={() => handleValidationDecision(false)}
-              >
-                Reject Handover
-              </button>
-              <button 
-                type="button" 
-                className="submit-btn" 
-                onClick={() => handleValidationDecision(true)}
-                disabled={scannedData.company?.status !== 'GREEN'}
-              >
-                Approve Handover
               </button>
             </div>
           </div>
